@@ -1,0 +1,39 @@
+name: Build (Nukem9 (original) repo)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out main repo
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      with:
+        repository: 'Nukem9/dlssg-to-fsr3'
+        submodules: 'recursive'
+
+    - name: Install Vulkan SDK
+      uses: humbletim/install-vulkan-sdk@main
+      with:
+        version: latest
+        cache: true
+
+    - name: Build FSR
+      shell: bash
+      run: |
+        cd dependencies/FidelityFX-SDK/sdk/
+        ./BuildFidelityFXSDK.bat
+
+    - name: Build
+      shell: pwsh
+      run: |
+        ./Make-Release.ps1
+
+    - name: Upload
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      with:
+        name: Default
+        path: './bin/built-packages/dlssg-to-fsr3-*.zip'
+        if-no-files-found: ignore
