@@ -3,12 +3,9 @@ name: Build (lazerl0rd fork)
 on:
   workflow_dispatch:
 
-permissions: write-all
-
 jobs:
   build:
     runs-on: windows-latest
-    continue-on-error: true
 
     steps:
     - name: Check out main repo
@@ -26,31 +23,17 @@ jobs:
     - name: Build FSR
       shell: bash
       run: |
-        cd dependencies/FidelityFX-SDK
-        ./BuildFSRSolutionNativeDll.bat
+        cd dependencies/FidelityFX-SDK/sdk/
+        ./BuildFidelityFXSDK.bat
 
     - name: Build
       shell: pwsh
       run: |
         ./Make-Release.ps1
 
-    - name: Upload DLSSTweaks Edition
-      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
-      with:
-        name: DLSSTweaks-Edition
-        path: './bin/built-packages/dlssg-to-fsr3-*DLSSTweaks*.zip'
-        if-no-files-found: ignore
-    
-    - name: Upload Universal Edition
-      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
-      with:
-        name: Universal-Edition
-        path: './bin/built-packages/dlssg-to-fsr3-*Universal*.zip'
-        if-no-files-found: ignore
-
-    - name: Upload Default
+    - name: Upload
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
       with:
         name: Default
-        path: './bin/built-packages/dlssg-to-fsr3-[0-9]*.[0-9]*.zip'
+        path: './bin/built-packages/dlssg-to-fsr3-*.zip'
         if-no-files-found: ignore
