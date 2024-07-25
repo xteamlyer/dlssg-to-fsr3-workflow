@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Check out main repo
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      uses: actions/checkout@main
       with:
         repository: 'Nukem9/dlssg-to-fsr3'
         submodules: 'recursive'
@@ -19,6 +19,12 @@ jobs:
       with:
         version: latest
         cache: true
+
+    - name: Install cmake
+      uses: lukka/get-cmake@main
+      with:
+        cmakeVersion: latest
+        ninjaVersion: latest
 
     - name: Build FSR
       shell: bash
@@ -32,7 +38,7 @@ jobs:
         ./Make-Release.ps1
 
     - name: Upload
-      uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
+      uses: actions/upload-artifact@main
       with:
         name: Default
         path: './bin/built-packages/dlssg-to-fsr3-*.zip'
